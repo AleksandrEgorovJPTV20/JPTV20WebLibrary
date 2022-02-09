@@ -60,6 +60,8 @@ public class ManagerServlet extends HttpServlet {
                 request.getRequestDispatcher("/listBooks.jsp").forward(request, response);
                 break;
             case "/listAuthors":
+                List<Author> newAuthors = authorFacade.findAll();
+                request.setAttribute("authors",newAuthors);
                 request.setAttribute("info", "Показываем форму");
                 request.getRequestDispatcher("/listAuthors.jsp").forward(request, response);
                 break;
@@ -122,9 +124,21 @@ public class ManagerServlet extends HttpServlet {
             case "/updateBook":
                 bookId = request.getParameter("bookId");
                 bookName = request.getParameter("bookName");
-                String[] newBookAuthors = request.getParameterValues("authors");
+                authors = new ArrayList<>();
+                String[] newBookAuthorsArray = request.getParameterValues("authors");
+                for (int i = 0; i < newBookAuthorsArray.length; i++) {
+                    authors.add(authorFacade.find(Long.parseLong(newBookAuthorsArray[i])));
+                }
+                publishedYear = request.getParameter("publishedYear");
+                quantity = request.getParameter("quantity");
                 Book updateBook = bookFacade.find(Long.parseLong(bookId));
-                
+                updateBook.setBookName(bookName);
+                updateBook.setQuantity(Integer.parseInt(quantity));
+                updateBook.setPublishedYear(Integer.parseInt(publishedYear));
+                updateBook.setAuthor(authors);
+                bookFacade.edit(updateBook);
+                request.setAttribute("info", "Книга изменена");
+                request.getRequestDispatcher("/editListBooks").forward(request, response);
                 break;            
         }
     }

@@ -14,9 +14,9 @@
             <form action="updateBook" method="POST">
                 <div class="mb-3">
                     <label for="bookName" class="form-label">Название книги</label>
-                    <input type="text" class="form-control" name="bookName" id="bookName" aria-describedby="" value="${bookName}">
+                    <input type="text" class="form-control" name="bookName" id="bookName" aria-describedby="" value="${book.bookName}">
                     <div id="bookName" hidden class="form-text">Error</div>
-                    <input type="text" class="form-control" hidden name="id" id="id" value="${id}">
+                    <input type="text" class="form-control" hidden name="bookId" id="bookId" value="${book.id}">
                 </div>
                 <div class="mb-3">
                     <label for="authors" class="form-label">Авторы</label>
@@ -28,12 +28,12 @@
                 </div>
                 <div class="mb-3">
                     <label for="publishedYear" class="form-label">Год издания</label>
-                    <input type="text" class="form-control" name="publishedYear" id="publishedYear" aria-describedby="" value="${publishedYear}">
+                    <input type="text" class="form-control" name="publishedYear" id="publishedYear" aria-describedby="" value="${book.publishedYear}">
                     <div id="publishedYear" hidden class="form-text">Error</div>
                 </div>
                 <div class="mb-3">
                     <label for="quantity" class="form-label">Количество экземпляров</label>
-                    <input type="text" class="form-control" name="quantity" id="quantity" aria-describedby="" value="${quantity}">
+                    <input type="text" class="form-control" name="quantity" id="quantity" aria-describedby="" value="${book.quantity}">
                     <div id="quantity" hidden class="form-text">Error</div>
                 </div>
 
@@ -42,4 +42,3 @@
         </div>
     </div>
 </div>
-                    <script src="js/updateBook.js"></script>

@@ -17,10 +17,10 @@
             <a class='nav-link <c:if test="${activeAddBook}">active</c:if>' aria-current="page" href="addBook">Добавить книгу</a>
           </li>
           <li class="nav-item">
-            <a class='nav-link <c:if test="${activeEditBook}">active</c:if>' aria-current="page" href="editBook">Редактировать книгу</a>
+            <a class='nav-link <c:if test="${activeEditListBooks}">active</c:if>' href="editListBooks">Редактировать книгу</a>
           </li>
           <li class="nav-item">
-            <a class='nav-link <c:if test="${activeAddAuthor}">active</c:if>' aria-current="page" href="addAuthor">Добавить автора</a>
+            <a class='nav-link <c:if test="${activeAddAuthor}">active</c:if>' href="addAuthor">Добавить автора</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Link</a>
