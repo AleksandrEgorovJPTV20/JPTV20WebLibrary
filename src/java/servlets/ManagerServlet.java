@@ -10,7 +10,9 @@ import entity.Book;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,9 +30,11 @@ import session.BookFacade;
     "/editBook",
     "/updateBook",
     "/listBooks",
-    "/listAuthors",
     "/addAuthor",
-    "/createAuthor"
+    "/createAuthor",
+    "/editListAuthors",
+    "/editAuthor",
+    "/updateAuthor"
 })
 public class ManagerServlet extends HttpServlet {
     @EJB private AuthorFacade authorFacade;
@@ -59,12 +63,6 @@ public class ManagerServlet extends HttpServlet {
                 request.setAttribute("books", books);
                 request.getRequestDispatcher("/listBooks.jsp").forward(request, response);
                 break;
-            case "/listAuthors":
-                List<Author> newAuthors = authorFacade.findAll();
-                request.setAttribute("authors",newAuthors);
-                request.setAttribute("info", "Показываем форму");
-                request.getRequestDispatcher("/listAuthors.jsp").forward(request, response);
-                break;
             case "/addAuthor":
                 request.setAttribute("activeAddAuthor", true);
                 request.setAttribute("info", "Показываем форму");
@@ -82,6 +80,34 @@ public class ManagerServlet extends HttpServlet {
                 request.setAttribute("info", "Добавили книгу в базу");
                 authorFacade.create(newAuthor);
                 request.getRequestDispatcher("/addAuthor").forward(request, response);
+                break;
+            case "/editListAuthors":
+                request.setAttribute("activeEditListAuthors", true);
+                List<Author> newAuthors = authorFacade.findAll();
+                request.setAttribute("authors",newAuthors);
+                request.setAttribute("info", "Показываем форму");
+                request.getRequestDispatcher("/WEB-INF/editListAuthors.jsp").forward(request, response);
+                break;
+            case "/editAuthor":
+                request.setAttribute("activeEditListAuthors", true);
+                String authorId = request.getParameter("authorId");
+                Author author = authorFacade.find(Long.parseLong(authorId));
+                request.setAttribute("author", author);
+                request.getRequestDispatcher("/WEB-INF/editAuthor.jsp").forward(request, response);                
+                break;
+            case "/updateAuthor":
+                authorId = request.getParameter("authorId");
+                firstname = request.getParameter("firstname");
+                lastname = request.getParameter("lastname");
+                birthYear = request.getParameter("birthYear");
+                
+                Author updateAuthor = authorFacade.find(Long.parseLong(authorId));
+                updateAuthor.setFirstname(firstname);
+                updateAuthor.setLastname(lastname);
+                updateAuthor.setBirthYear(Integer.parseInt(birthYear));
+                request.setAttribute("info", "Добавили автора в базу");
+                authorFacade.edit(updateAuthor);
+                request.getRequestDispatcher("/editListAuthors").forward(request, response);
                 break;
             case "/addBook":
                 request.setAttribute("info", "Показываем форму");
@@ -111,15 +137,29 @@ public class ManagerServlet extends HttpServlet {
                 break;
                 
             case "/editListBooks":
+                request.setAttribute("activeEditListBooks", true);
                 List<Book> listBooks = bookFacade.findAll();
                 request.setAttribute("books", listBooks);
-                request.getRequestDispatcher("/WEB-INF/editListBooks.jsp").forward(request, response);                
+                request.getRequestDispatcher("/WEB-INF/editListBooks.jsp").forward(request, response);
                 break;
             case "/editBook":
+                request.setAttribute("activeEditListBooks", true);
                 String bookId = request.getParameter("bookId");
+                Map<Author,Boolean> mapAuthors = new HashMap<>();
+                List<Author> listAuthors = authorFacade.findAll();
                 Book book = bookFacade.find(Long.parseLong(bookId));
-                request.setAttribute("Book", book);
-                request.getRequestDispatcher("/WEB-INF/editBook.jsp").forward(request, response);                
+                for (int i = 0; i < listAuthors.size(); i++) {
+                    if(book.getAuthor().contains(listAuthors.get(i))) {
+                        mapAuthors.put(listAuthors.get(i), Boolean.TRUE);
+                       
+                    }else{
+                        mapAuthors.put(listAuthors.get(i), Boolean.FALSE);                        
+                    }
+                    
+                }
+                request.setAttribute("mapAuthors", mapAuthors);
+                request.setAttribute("book", book);
+                request.getRequestDispatcher("/WEB-INF/editBook.jsp").forward(request, response);
                 break;
             case "/updateBook":
                 bookId = request.getParameter("bookId");
@@ -131,6 +171,13 @@ public class ManagerServlet extends HttpServlet {
                 }
                 publishedYear = request.getParameter("publishedYear");
                 quantity = request.getParameter("quantity");
+                if(bookId.isEmpty() || bookName.isEmpty() || newBookAuthorsArray.length == 0
+                        || publishedYear.isEmpty() || quantity.isEmpty()){
+                    request.setAttribute("info", "Заполните все поля и выберите авторов");
+                    request.setAttribute("bookId", bookId);
+                    request.getRequestDispatcher("/editBook").forward(request, response);
+                    break;
+                }
                 Book updateBook = bookFacade.find(Long.parseLong(bookId));
                 updateBook.setBookName(bookName);
                 updateBook.setQuantity(Integer.parseInt(quantity));
@@ -139,7 +186,7 @@ public class ManagerServlet extends HttpServlet {
                 bookFacade.edit(updateBook);
                 request.setAttribute("info", "Книга изменена");
                 request.getRequestDispatcher("/editListBooks").forward(request, response);
-                break;            
+                break;         
         }
     }
 

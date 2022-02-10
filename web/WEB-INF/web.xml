@@ -17,6 +17,8 @@
             <url-pattern>/WEB-INF/editListBooks.jsp</url-pattern>
             <url-pattern>/WEB-INF/addAuthor.jsp</url-pattern>
             <url-pattern>/listBooks.jsp</url-pattern>
+            <url-pattern>/WEB-INF/editAuthor.jsp</url-pattern>
+            <url-pattern>/WEB-INF/editListAuthors.jsp</url-pattern>
             <page-encoding>UTF-8</page-encoding>
             <include-prelude>/WEB-INF/jspf/header.jspf</include-prelude>
             <include-coda>/WEB-INF/jspf/footer.jspf</include-coda>

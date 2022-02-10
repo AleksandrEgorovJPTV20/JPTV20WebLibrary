@@ -23,8 +23,8 @@
             <a class='nav-link <c:if test="${activeAddAuthor}">active</c:if>' href="addAuthor">Добавить автора</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
+            <a class='nav-link <c:if test="${activeEditListAuthors}">active</c:if>' href="editListAuthors">Редактировать автора</a>
+          </li>          
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Dropdown
